@@ -1,0 +1,36 @@
+
+
+
+--- > Main 1
+
+1. convert int[] to Integer[]
+        int[] arr = {1,2,3};
+        Integer[] array = Arrays.stream(arr).boxed().toArray(Integer[]::new);
+
+
+2. convert Integer[] to int[] array
+        Integer[] array2 = {1,2,3};
+        int[] ints = Arrays.stream(array2).mapToInt(i -> i).toArray();
+
+3.
+
+        String[] split = A.split("");
+        Stream<String> sorted = Arrays.stream(A.split("")).sorted();
+        Set<String> collect = Arrays.stream(split).collect(Collectors.toSet());
+        Object[] objects = Arrays.stream(split).collect(Collectors.toSet()).toArray();
+        Character[] characters = Arrays.stream(split).collect(Collectors.toSet()).toArray(Character[]::new);
+        String[] strings = Arrays.stream(split).collect(Collectors.toSet()).toArray(String[]::new);
+
+
+
+4. reverse string
+    return new StringBuilder(A).reverse().toString();
+
+5. convert array to spring
+    String s = String.join(" ", strArr).trim();
+
+6. add value to hashmap
+    map.put(val, map.getOrDefault(val, 0) + 1);
+
+7. number of unique element in the array
+    return Arrays.stream(A).boxed().collect(Collectors.toSet()).size();

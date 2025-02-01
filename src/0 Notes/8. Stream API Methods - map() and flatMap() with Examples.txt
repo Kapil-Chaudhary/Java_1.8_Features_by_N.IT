@@ -1,0 +1,362 @@
+
+
+
+
+
+------------------------		8 Mastering Java 8_ Stream API Methods - map() and flatMap() with Examples _ Smart Java Developer _-(720p)				-------------------
+
+===========================
+	Mapping Operations
+===========================
+
+
+1. Mapping Operations are belongs to intermediate operations in the stream API.
+2. Mapping Operations are used to transform the stream elements and return transformed elements as new stream.
+3. filter is used to filter the data but map is used to transform the data.						
+						Ex: Stream map(Function function)
+		
+		
+		
+		// convert all the elements to uppercase character
+        List<String> list = Arrays.asList("india", "usa", "uk", "japan");
+
+
+        // 1. method1  -- legacy method
+//        for ( String str : list ) System.out.print(str.toUpperCase() + " ");
+//        System.out.println();
+
+
+        // 2. method2 -- java 8 
+        List<String> list1 = list.stream().map(i -> i.toUpperCase()).toList();
+        System.out.println(list1);
+		
+		
+		
+						
+Note : 
+	filter will take predicate as input and return stream as output.
+	but map will take function as input and return stream as output.
+	
+	
+--- CODE 1 -----
+
+    public static void main(String[] args) {
+
+        // convert all the elements to uppercase character
+        List<String> list = Arrays.asList("india", "usa", "uk", "japan");
+
+
+        // 1. method1  -- legacy method
+//        for ( String str : list ) System.out.print(str.toUpperCase() + " ");
+//        System.out.println();
+
+
+        // 2. method2
+        list.stream().map(i-> i.toUpperCase() ).forEach( j -> System.out.print(j + " "));
+        System.out.println();
+
+        List<String> list1 = list.stream().map(i -> i.toUpperCase()).toList();
+        System.out.println(list1);
+
+    }
+
+
+---  CODE 2 ----
+
+        // find the length of each name in list
+        List<String> list = Arrays.asList("india", "usa", "uk", "japan");
+        list.stream().map( name -> name.length() ).forEach(i -> System.out.print(i + " ") ); // 5 3 2 5
+  
+
+--- CODE 3  ----
+
+	// print names with its length starting with latter 'A'
+        
+		List<String> list = Arrays.asList("Ashok", "Anil", "Raju", "Rani", "John", "Akash", "Charles");
+        list.stream()
+                .filter(name -> name.startsWith("A") ) // we can use map here as well so instead of filtering the names it will get all these names that start with 'A'
+                .map(name -> name.length() )
+                .forEach(name -> System.out.print(name + " ")); // 5 4 5
+
+
+	// OR 
+	
+	// print names with its length starting with latter 'A'
+        List<String> list = Arrays.asList("Ashok", "Anil", "Raju", "Rani", "John", "Akash", "Charles");
+        list.stream()
+                .filter(name -> name.startsWith("A") ) // we can use map here as well so instead of filtering the names it will get all these names that start with 'A'
+                .map(name -> name + " - " + name.length() )
+                .forEach(name -> System.out.println(name)); 
+				
+				-- output --
+					Ashok 5
+					Anil 4
+					Akash 5
+
+
+
+--- CODE 4 	---   = Get emp name with emp age whose salary > 5 using Stream API
+
+ 
+
+
+
+class Employee{
+    String name;
+    int age;
+    double salary;
+
+    public Employee() {}
+
+    public Employee(String name, int age, double salary) {
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", salary=" + salary +
+                '}';
+    }
+}
+
+public class SecondDemo {
+
+    public static void main(String[] args) {
+
+        Employee emp1 = new Employee("kapil", 24, 5);
+        Employee emp2 = new Employee("akash", 22, 7);
+        Employee emp3 = new Employee("deepak", 32, 2);
+        Employee emp4 = new Employee("shivam", 28, 9);
+
+
+        // Get emp name with emp age whose salary > 5 using Stream API
+        List<Employee> list = Arrays.asList(emp1, emp2, emp3, emp4);
+
+        list.stream().filter(emp -> emp.salary>5 )
+                .map( emp -> emp.name +  ", " + emp.age)
+                .forEach( emp -> System.out.println(emp));
+
+        // OR
+        list.stream().filter(emp -> emp.salary>5 )
+                .forEach( emp -> System.out.println(emp.name +  ", " + emp.age));
+
+
+    }
+}
+
+
+
+
+
+
+===========================================
+	What is FlatMap(Function f ) Method 
+===========================================
+
+
+1. It is used to flatten list of streams into a single streams 
+2. If collections inside another collections then we will go for another collections.
+
+
+public class ThirdDemo {
+
+    public static void main(String[] args) {
+
+
+        List<String> javaCources = Arrays.asList("core java", "adv java", "spring boot");
+        List<String> uiCourses = Arrays.asList("html", "css", "bs", "js");
+
+        List<List<String>> courses = Arrays.asList(javaCources, uiCourses);
+
+//        courses.stream().forEach(c -> System.out.println(c));
+							//				-- output --
+							//						[core java, adv java, spring boot]
+							//						[html, css, bs, js]								
+
+
+        Stream<String> fm = courses.stream().flatMap(s -> s.stream());
+        fm.forEach(c -> System.out.println(c));
+						
+						-- output --
+								core java
+								adv java
+								spring boot
+								html
+								css
+								bs
+								js
+		
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+======================================
+	Slicing Operation with Stream 
+======================================
+
+1. distinct() = To get unique elements from the stream. 
+2. limit(long maxSize) = Get list elements from the stream based on given size.
+3. skip(long n) = It is used to skip given number of elements from starting.
+
+
+Note : All the above 3 methods are comes under Intermediate Operational Methods. They will perform operation and return new stream.
+
+-- CODE 1 ---
+
+public class FourthDemo {
+
+    public static void main(String[] args) {
+
+        List<String> javacourses = Arrays.asList("corejava", "advJava", "springBoot", "restAPI", "microservices", "corejava");
+
+        // 1
+        Stream<String> stream = javacourses.stream().limit(3);
+        stream.forEach(i -> System.out.print(i + " ")); // corejava advJava springBoot
+        System.out.println();
+
+        // OR
+        javacourses.stream().limit(3).forEach(i -> System.out.print(i + " ")); // corejava advJava springBoot
+        System.out.println();
+
+        // 2
+        javacourses.stream().distinct().forEach(i -> System.out.print(i + " ")); // corejava advJava springBoot restAPI microservices 
+        System.out.println();
+
+        // 3
+        javacourses.stream().skip(3).forEach(i -> System.out.print(i + " ")); // restAPI microservices corejava 
+    }
+}
+
+
+
+
+
+
+
+=========================================
+	Matching Operations with Stream --> there are slicing operations
+=========================================
+1. anyMatch() 
+2. allMatch()
+3. noneMatch() 
+4. findFirst() 
+
+Note : above 3 methods are belongs to Terminal Operations.
+
+
+public class FifthDemo {
+
+    public static void main(String[] args) {
+        Person person1 = new Person("John", "USA");
+        Person person2 = new Person("Steve", "JAPAN");
+        Person person3 = new Person("Ching", "CHINA");
+
+        List<Person> persons = Arrays.asList(person1, person2, person3);
+
+
+        boolean status = persons.stream().anyMatch(p -> p.country.equals("CHINA"));
+        System.out.println("Any Indian Available ?  :: " + status); // true
+
+
+        boolean status2 = persons.stream().allMatch(P -> P.country.equals("INDIA"));
+        System.out.println("All Persons from INDIA : " + status2); //false
+
+        boolean status3 = persons.stream().noneMatch(p -> p.country.equals("MEXICO"));
+        System.out.println("No person from Mexico ? : " + status3); // true
+
+    }
+}
+
+
+
+
+
+
+==============================
+	Collectors with Stream
+==============================
+
+1. Collectors is used to collect data from stream.
+
+
+--- CODE ---
+Q1 : get collection from all persons collection that belongs to India
+        
+		List<Person> collections2 = persons.stream().filter(p -> p.country.equals("INDIA")).collect(Collectors.toList());
+        collections2.forEach(p -> System.out.println(p.name + " - " + p.country));
+                                                                        // Kapil - INDIA
+                                                                        // Akash - INDIA
+
+Q2 : collect name of persons who are belongs to india and store into names collection
+																			
+	List<String> names = persons.stream()
+					.filter(p -> p.country.equals("INDIA"))
+					.map(p -> p.name )
+					.collect(Collectors.toList());
+					System.out.println(names); // [Kapil, Akash]
+																		
+																		
+																		
+																		
+																		
+																			
+																			
+																			
+																			
+-------------	Summery 	----------------
+
+set a. These 3 are intermediate operations, these operation return the stream.
+
+Filters - filter()
+Mappings - map() & flatMap()
+Slicing - distinct() & limit() & skip()
+
+
+
+set b. These are terminal operations, these operation will return the result.
+
+Finding -> findFirst() & findAny()
+Matching -> anyMatch(), allMatch() & noneMatch()
+Collecting -> collect()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

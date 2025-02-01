@@ -1,0 +1,308 @@
+
+
+=======================================================================
+Task 3 : Take 2 input and perform sum of two inputs and return output
+=======================================================================
+
+1. BiFunction<Integer,Integer> bif = (a,b) --> a+b; 
+
+a. Example 
+--------
+
+public class BiFunctionExample {
+
+    // Function Functional Interface
+    public static void addition(int val1, int val2){
+        BiFunction<Integer,Integer,Integer> bif = (a, b) -> a + b;
+        Integer addition = bif.apply(val1, val2);
+        System.out.println(addition);
+
+    }
+
+
+    // 2. other example of Functional Interface
+    public static void solve2(){
+        Function<String,Integer> fi = (name) -> name.length();
+        
+    }
+
+
+    public static void main(String[] args) {
+        addition(10, 20);
+    }
+}
+
+
+
+
+
+
+
+==========================
+	Method Refrence
+==========================
+
+1. Method refrence means refrence to one method from another Method.
+
+	
+		MyInterface mi1 = () -> System.out.println("Hi !!");
+		
+		// this is method refrence
+        MyInterface mi2 = MethodRefrance::m2; // so whenever i want to execute interface method, i want to refer another method
+		
+		
+
+
+------ Method Refrence -------------
+
+
+	public class MethodRefrance {
+
+		// consumer simple example
+		public static void solve(){
+			Consumer<String> consumer = (msg) -> System.out.println(msg);
+			consumer.accept("kapil message !!");
+		}
+
+		public static void m2(){
+			System.out.println("this is m2() method !!");
+		}
+
+
+		public static void main(String[] args) {
+			
+	//        MethodRefrance.m2(); // this is m2() method !!
+
+			MyInterface mi1 = () -> System.out.println("Hi !!");
+
+			// this is method refrence
+			MyInterface mi2 = MethodRefrance::m2; // so whenever i want to execute interface method, i want to refer another method
+
+			mi1.m1(); // Hi !!
+			mi2.m1(); // this is m2() method !!
+
+		}
+	}
+
+
+
+
+-----------   InstanceMethodReference   --------------
+
+	public class InstanceMethodReference {
+
+		public void m1(){
+			for ( int i=0; i<5; i++ ) System.out.print(i + " ");
+		}
+
+
+		public static void main(String[] args) {
+
+			InstanceMethodRefrance imr = new InstanceMethodRefrance();
+
+			// so i want to refer my instance method to method refrance by using functional interface,
+			// so i use runnable,
+			Runnable r = imr::m1; // if we want to refer one method to another method, then we will go for method refrence
+			// run method is a static method ( not instance method )
+
+			Thread t = new Thread(r);
+			t.start();
+
+		}
+	}
+
+
+
+
+----- Constructor Interface ---------
+
+	class Doctor{
+		Doctor(){
+			System.out.println("Doctor Constructor !!");
+		}
+
+		// 2
+		Doctor(String name){
+			System.out.println("name of doctor : " + name);
+		}
+	}
+
+
+	public class ConstructorRefrance {
+		public static void main(String[] args) {
+
+	//        Doctor d = new Doctor(); // this is normal method  -> will print = Doctor Constructor !!
+
+			Supplier<Doctor> s = Doctor::new; // Doctor Constructor !! // error on perimeterized constructor
+	//        System.out.println(s.get().hashCode()); // 1232445212
+			Doctor doctor = s.get(); // object is created
+			System.out.println(doctor.hashCode()); // give hashcode of that object
+
+			// 2
+	//        Consumer<String> si = Doctor::new;
+	//        System.out.println(si);
+	//        System.out.println(si.hashCode());
+
+		}
+	}
+	
+
+
+
+
+===========================================================================================================
+Task 4 : Write a java program to print a number from 1 to 5 using thread with the help of Runnable Interface
+===========================================================================================================
+
+
+1. 
+// Approch 1
+
+// 1. overrideing the run method by implementing the Runnable interface
+// 2. now create the object of my class
+// 3. and now my onject is passing as a parameter to thread class
+// 4. now calling t.start() --> so whenever i call t.start() thread schedule will start, thread schedule will allocate the resource the to thread and it is going to execute the thread.
+
+public class Task4_ThreadDemo1 implements Runnable{
+
+    @Override
+    public void run() {
+        for ( int i=1; i<=5; i++ ) System.out.print(i + " ");
+    }
+
+
+    public static void main(String[] args) {
+        Task4_ThreadDemo1 td = new Task4_ThreadDemo1();
+        Thread t = new Thread(td);
+        t.start();
+    }
+
+}
+
+
+
+
+2. 
+
+// Approach 2
+
+// 1. here, instead of implementing a interface, i'm going for anonymous implementation
+public class Task4_ThreadDemo2 {
+
+    public static void main(String[] args) {
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                for ( int i=1; i<=5; i++ ) System.out.print(i + " ");
+            }
+        };
+
+
+        Thread t = new Thread(r);
+        t.start();
+
+    }
+}
+
+
+
+3. 
+
+// Approach - 3
+
+public class Task4_ThreadDemo3 {
+    public static void main(String[] args) {
+
+        Runnable r  = () -> {
+            for (int i = 1; i <= 5; i++) System.out.print(i + " ");
+        };
+
+        Thread t = new Thread(r);
+        t.start();
+
+    }
+}
+
+
+
+
+
+===========================================================================================================
+Task 5 : Write a java program to store numbers in arrayList and sort numbers in decending order.
+===========================================================================================================
+
+
+1. approach-1 ( do same sort by creating an another class )
+
+	class MyComparator implements Comparator<Integer>{
+
+		@Override
+		public int compare(Integer o1, Integer o2) {
+			if ( o1 > o2 ) return -1;
+			else if ( o1 < o2 ) return 1;
+			else return 0;
+		}
+
+	}
+	public class Task5_NumbersSort {
+
+
+		public static void main(String[] args) {
+			//    List<Integer> list = Arrays.asList(1,2,3,4);
+			ArrayList<Integer> list = new ArrayList<>(Arrays.asList(1,2,3,4,5));
+
+			Collections.sort(list, new MyComparator());
+			System.out.println("After sort : " + list);
+		}
+	}
+
+
+2. approach-2 ( do same sort int same class )
+
+
+	public class Task5_NumbersSort2  implements Comparator<Integer> {
+
+		@Override
+		public int compare(Integer o1, Integer o2) {
+			if ( o1 > o2 ) return -1;
+			else if ( o1 < o2 ) return 1;
+			else return 0;
+		}
+
+		public static void main(String[] args) {
+
+			//    List<Integer> list = Arrays.asList(1,2,3,4);
+			ArrayList<Integer> list = new ArrayList<>(Arrays.asList(1,2,3,4,5));
+
+			Collections.sort(list, new Task5_NumbersSort2());
+			System.out.println("After sort : " + list);
+		}
+	}
+
+
+3. Approach-3 ( with lambda )
+
+	public class Task5_NumbersSort3 {
+
+		public static void main(String[] args) {
+
+			ArrayList<Integer> list = new ArrayList<>(Arrays.asList(1,2,3,4,5));
+			System.out.println("Before sort : " + list);
+ 
+	//        Collections.sort(list, (a,b) -> b-a); // this is biFunction Function Integer
+	//        Collections.sort(list, (i,j) -> j.compareTo(i));
+	//            Collections.sort(list, (i,j) -> (i>j) ? -1 : (i<j) ? 1 : 0);
+			Collections.sort(list, (i,j) -> (i>j) ? -1 : 1);
+
+			System.out.println("After sort 3 : " + list);
+
+		}
+	}
+
+		
+
+
+==============================
+Revision --> 1:26:00 duration 
+==============================

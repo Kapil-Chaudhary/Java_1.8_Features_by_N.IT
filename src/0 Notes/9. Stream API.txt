@@ -1,0 +1,319 @@
+
+
+
+
+
+
+
+
+
+
+
+------------------------			9. Java 8 features __ Lecture No _ 09 __ Smart Java Developer			---------------------------------------------
+
+
+
+1. Write a java program to get MIN, MAX and AVG salary from the given employee data.
+
+
+-------- code 1 ---------------
+
+
+public class Demo1 {
+
+    public static void main(String[] args) {
+
+        // 1.
+        // get min, max and average from the list
+        ArrayList<Integer> list = new ArrayList<>(Arrays.asList(1,2,3));
+
+        // max
+        int max = list.stream().max(Integer::compareTo).get();
+        System.out.println("max : " + max);
+
+        // min
+        Integer min = list.stream().min(Integer::compare).get();
+        System.out.println("min : " + min);
+
+        int i1 = list.stream().mapToInt(i -> i).min().getAsInt();
+        System.out.println("min : " + i1);
+
+
+        // average
+        double average = list.stream().mapToDouble(i -> i).average().orElse(0.0);
+        System.out.println("average : " + average);
+
+        double asDouble = list.stream().mapToDouble(i -> i).average().getAsDouble();
+        System.out.println("average : " + average);
+    }
+}
+
+
+
+
+--- code 1.2 --------
+class Employee{
+    int id;
+    String name;
+    Double salary;
+
+    public Employee(int id, String name, Double salary) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", salary=" + salary +
+                '}';
+    }
+}
+
+public class Demo2 {
+
+    public static void main(String[] args) {
+
+        Employee e1 = new Employee(1, "Robert", 26500.00);
+        Employee e2 = new Employee(2, "Albert", 46500.00);
+        Employee e3 = new Employee(3, "Ching", 36500.00);
+        Employee e4 = new Employee(4, "David", 16500.00);
+        Employee e5 = new Employee(5, "Cathy", 25500.00);
+
+
+        ArrayList<Employee> list = new ArrayList<>(Arrays.asList(e1, e2, e3, e4, e5));
+
+        // max salary from employees
+        Stream<Employee> stream = Stream.of(e1, e2, e3, e4, e5);
+        Optional<Employee> optional = stream.collect(Collectors.maxBy(Comparator.comparing(e -> e.salary)));
+        Employee maxSalary = optional.get();
+        System.out.println("Max Salary : " + maxSalary.salary);
+
+        System.out.println("\n");
+
+
+
+
+        // min salary from employees
+        Employee min_emp = list.stream().collect(Collectors.minBy(Comparator.comparing(e -> e.salary))).get();
+        System.out.println("Min Salary : " + min_emp.salary);
+
+        Double minSalary_2 = list.stream().collect(Collectors.minBy(Comparator.comparing(e -> e.salary))).get().salary;
+        System.out.println("Min Salary 2 : " + minSalary_2);
+
+        Stream<Double> doubleStream = list.stream().map(emp -> emp.salary);
+        int asInt = doubleStream.mapToInt(i -> i.intValue()).min().getAsInt();
+        System.out.println("min Salary 3 : " + asInt);
+
+
+        int asInt2 = list.stream().mapToInt(i -> i.salary.intValue()).min().getAsInt();
+        System.out.println("min salary 4 : " + asInt2);
+
+        System.out.println("\n");
+
+
+
+
+
+
+
+
+        // find average
+        Double average = list.stream().collect(Collectors.averagingDouble(e -> e.salary));
+        System.out.println("Average salary : " + average);
+
+        double averageSalary_2 = list.stream().mapToDouble(emp -> emp.salary).average().getAsDouble();
+        System.out.println("Average salary 2 : " + averageSalary_2);
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+=============================
+	Group By using Stream 
+=============================
+
+1. Group By is used to categorized the data / Grouping the data 
+2. When we use grouping() function with stream then it will return the data as Key-Value(s) pair and it will return map object.
+3. In below example employees will be grouped based on country name. 
+
+
+Question 1 - List out employees that belongs to india 
+
+
+class Employee2 {
+    int id;
+    String name;
+    Double salary;
+    String location;
+
+    public Employee2(int id, String name, Double salary, String location) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+        this.location = location;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee2{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", salary=" + salary +
+                ", location='" + location + '\'' +
+                '}';
+    }
+}
+
+public class Demo3_GroupBy {
+
+
+    public static void main(String[] args) {
+
+        Employee2 e1 = new Employee2(1, "Robert", 26500.00, "USA");
+        Employee2 e2 = new Employee2(2, "Albert", 46500.00, "INDIA");
+        Employee2 e3 = new Employee2(3, "Ching", 36500.00, "CHINA");
+        Employee2 e4 = new Employee2(4, "David", 16500.00, "INDIA");
+        Employee2 e5 = new Employee2(5, "Cathy", 25500.00, "USA");
+
+
+        ArrayList<Employee2> list = new ArrayList<>(Arrays.asList(e1, e2, e3, e4, e5));
+
+
+        Map<String, List<Employee2>> collect = list.stream()
+                .collect(Collectors
+                        .groupingBy(emp -> emp.location));
+
+        System.out.println(collect);
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================
+	Parallel Streams 
+========================
+
+1. Generally Streams will execute in sequence order.
+2. To improve execution process we can use parallel streams.
+3. Parallel streams introduced to improve performance of the program.
+
+
+--------------
+	CODE :
+--------------
+
+
+package Lacture9;
+
+import java.util.stream.Stream;
+
+public class Demo3_parallelDemo {
+
+    public static void main(String[] args) {
+
+        System.out.println("------------------------------- serial stream ");
+        Stream<Integer> serial_stream = Stream.of(1, 2, 3, 4);
+        serial_stream.forEach(i -> System.out.println(i + " :: " + Thread.currentThread()));
+
+            /* so main theread is printing our data
+    /                                      so whenever we run a java program so by-default JVM will create one thread to run our java program
+    /                                      so default thread is called main thread, so our stream is created by main thread and our stream is processed by main thread
+    */
+
+    /*
+        output ===>
+        ------------------------------- serial stream
+        1 :: Thread[main,5,main]
+        2 :: Thread[main,5,main]
+        3 :: Thread[main,5,main]
+        4 :: Thread[main,5,main]
+
+     */
+
+
+        System.out.println("-----------------------------------------   Parallel Stream --------");
+        Stream<Integer> parellelStream = Stream.of(1, 2, 3, 4);
+        parellelStream.parallel().forEach( i -> System.out.println(i + " :: " + Thread.currentThread()));
+
+
+        /*
+
+        -----------------------------------------   Parallel Stream --------
+            3 :: Thread[main,5,main]
+            4 :: Thread[main,5,main]
+            1 :: Thread[main,5,main]
+            2 :: Thread[ForkJoinPool.commonPool-worker-1,5,main]
+
+         */
+
+
+    }
+}
+
+
+
+
+
+
+
+
+
+==========================
+	Java Spliterator
+==========================
+
+
+1. Like iterator and ListIterator, Spliterator is one the java iterator.
+2. Spliterator iterator introduced in java 1.8v.
+3. Spliterator is an interface in collection api.
+4. Spliterator supports both serial and paraller programming.
+5. Spliterator we can use to traverse both collection and streams.
+6. Spliterator cannot be used to with Map implementation classes.
+
+
+
+--- CODE ---
+
+public class Demo3_parallelDemo_2 {
+
+    public static void main(String[] args) {
+
+        List<String> names = Arrays.asList("kapil", "Akash", "sachin", "deepak", "mohit");
+        Spliterator<String> spliterator = names.stream().spliterator();
+        spliterator.forEachRemaining(i -> System.out.println(i));
+
+    }
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,240 @@
+
+
+
+=================
+	Stream API 
+=================
+
+0. https://www.javatpoint.com/java-8-stream
+
+1. Stream API introduced in java 1.8v 
+
+2. Stream API is used to process the date .
+	Note : Collections is used to store th data.
+
+3. Stream API is one of the major features added in java 1.8v 
+
+4. A Stream in java can be defined as sequence of elements that comes from a source .
+
+5. source of data for Stream can be array or Collections. 
+
+
+NOTE : Introduced in Java 8, Stream API is used to process collections of objects. 
+	   A stream in Java is a sequence of objects that supports various methods which can be pipelined to produce the desired result. 
+
+
+-- Few Important about the Stream : 
+	1. Stream is not a data structure. Stream means bunce of operation applied on source data. Source can be Collections or array. 
+	2. Stream will not change the orginal data structure of the source ( it will just process )
+	3. Enable us to perform operations like filtering, mapping,reducing and sorting.
+	
+	
+
+
+
+
+--- Stream Creation 
+
+1. In java we can create Stream in 2 ways : 
+			a. Stream.of(e1, e2, e3, e4 ... )
+			b. stream() method 
+			
+			
+	-- CODE 1 --
+			public class FirstDemo {
+
+				public static void main(String[] args) {
+
+					// approch 1 : to create a stream object
+					// 1. create stream by stream.of(..) method
+					Stream<Integer> stream = Stream.of(1, 2, 3, 4, 5);
+					System.out.println(stream); // java.util.stream.ReferencePipeline$Head@65ab7765
+
+					
+					// // approch 2 : to create a stream object
+					// 2. create stream by stream method
+					ArrayList<Integer> list = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
+					Stream<Integer> stream1 = list.stream();
+					System.out.println(stream1); // java.util.stream.ReferencePipeline$Head@1b28cdfa
+				
+				}
+			}
+
+
+2. Stream API provided several methods to perform Operations on the data.
+
+3. We can divide Stream API methods into 2 types 
+			1. Intermediate Operational methods.
+			2. Terminal Operational methods. like 
+
+4. Intermediate Operational methods will perform operation on the stream and return the new Stream.
+		Ex : filter(), map(), sorted() ....
+
+   Terminal Operational methods will take input and will provide result as output.
+		Ex : count(), collect(), forEach(), reduce() ...
+
+
+
+
+
+============================
+	Filtering with stream 
+============================
+
+1. Filtering means getting data from orginal data 
+		Ex : get only even number from the given numbers.
+		Ex : get emp. whose salary >= 1,00,000 .
+		Ex : Get mobiles phones whose price is <=15,000 .
+
+
+2. To apply filter on the data Stream api provided filter() method.
+
+	Ex : Stream filter(Predicate p ) 
+
+
+Note : Stream<T> filter(Predicate<? super T> predicate)  =  It returns a stream consisting of the elements of this stream that match the given predicate.
+
+Note : redicate interface will take input ( and do if else operation on it ) and return boolean value as output
+
+
+
+
+==> Question 1 : print all numbers grater then 20 from the list
+	
+        List<Integer> list = Arrays.asList(22, 13, 44, 32, 1, 6);
+		list.stream().filter( i -> i>20 ).forEach( i -> System.out.print(i + " ")); // 22 44 32
+
+//        Stream<Integer> stream = list.stream().filter(i -> i > 20);
+//        stream.forEach(i -> System.out.print(i + " ")); // 22 44 32
+
+
+==> Question 2 : print names that start with 'A' or 'a'
+
+        List<String> list1 = Arrays.asList("john", "Anushka", "Robert", "Anupama", "Smith", "Ashoka");
+        list1.stream().filter(i -> i.startsWith("A") || i.startsWith("a") ).forEach( i -> System.out.print(i + " ")); // Anushka Anupama Ashoka 
+
+
+	
+==> Question 3 : filter the object - filter the user whose age is grater the or equal to 18
+        User u1 = new User("John", 25);
+        User u2 = new User("Smith", 30);
+        User u3 = new User("Raju", 15);
+        User u4 = new User("Rani", 10);
+        User u5 = new User("Charles", 35);
+        User u6 = new User("Ashok", 30);
+		
+		
+        // 1
+        Stream.of(u1, u2, u3, u4, u5, u6).filter( user -> user.age >= 18 ).forEach(user -> System.out.print(user.name + " ")); // John Smith Charles Ashok
+	
+	
+		// 2
+		System.out.println();
+        Stream.of(u1, u2, u3, u4, u5, u6)
+                .filter(user -> user.age >= 18 && user.name.startsWith("A") || user.name.startsWith("a"))
+                .forEach(user -> System.out.println(user)); // User{name='Ashok', age=30}
+
+
+        // 3. two filter can also applied 
+        System.out.println();
+        Stream.of(u1, u2, u3, u4, u5, u6)
+                .filter(user -> user.age >= 18)
+                .filter(user -> user.name.startsWith("A") || user.name.startsWith("a") )
+                .forEach(user -> System.out.println(user)); // User{name='Ashok', age=30}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+=======================
+		CODE 	
+=======================
+
+
+public class SecondDemo {
+
+    public static void main(String[] args) {
+
+
+        // 1. print all numbers grater then 20 from the list
+        List<Integer> list = Arrays.asList(22, 13, 44, 32, 1, 6);
+
+
+//        Stream<Integer> stream = list.stream().filter(i -> i > 20);
+//        stream.forEach(i -> System.out.print(i + " ")); // 22 44 32
+
+        list.stream().filter( i -> i>20 ).forEach( i -> System.out.print(i + " ")); // 22 44 32
+
+        /*
+        Stream<T> filter(Predicate<? super T> predicate)  =
+        It returns a stream consisting of the elements of this stream that match the given predicate.
+
+        predicate interface will take input ( and do if else operation on it ) and return boolean value as output
+
+         */
+
+
+
+        // 2. print names that start with 'A'
+        List<String> list1 = Arrays.asList("john", "Anushka", "Robert", "Anupama", "Smith", "Ashoka");
+        list1.stream().filter(i -> i.startsWith("A") || i.startsWith("a") ).forEach( i -> System.out.print(i + " ")); // Anushka Anupama Ashoka
+
+
+
+        // 3. filter the object
+        // filter the user whose age is grater the or equal to 18
+        User u1 = new User("John", 25);
+        User u2 = new User("Smith", 30);
+        User u3 = new User("Raju", 15);
+        User u4 = new User("Rani", 10);
+        User u5 = new User("Charles", 35);
+        User u6 = new User("Ashok", 30);
+
+        System.out.println();
+        Stream.of(u1, u2, u3, u4, u5, u6).filter( user -> user.age >= 18 ).forEach(user -> System.out.print(user.name + " ")); // John Smith Charles Ashok
+
+        System.out.println();
+        Stream.of(u1, u2, u3, u4, u5, u6)
+                .filter(user -> user.age >= 18 && user.name.startsWith("A") || user.name.startsWith("a"))
+                .forEach(user -> System.out.println(user)); // User{name='Ashok', age=30}
+
+
+        // or 2 filter
+        System.out.println();
+        Stream.of(u1, u2, u3, u4, u5, u6)
+                .filter(user -> user.age >= 18)
+                .filter(user -> user.name.startsWith("A") || user.name.startsWith("a") )
+                .forEach(user -> System.out.println(user)); // User{name='Ashok', age=30}
+
+    }
+}
+
+class User{
+    String name;
+    int age;
+
+    public User(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+}
+
+
+
+
+
+
+
+

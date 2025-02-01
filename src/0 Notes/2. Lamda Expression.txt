@@ -1,0 +1,281 @@
+
+
+-------------------------		Lambda Expression  ---------------------------------------------------
+
+1. introduced in 1.8 version
+2. java is Object Oriented programming language. Everything will be represented using classes and objects.
+3. from 1.8v onwards java is also called Functional Programming Language.
+4. In OOP classes and objects are main entity. we need to write method inside class only.
+5. Functional Programming means we need to write everything in form of function. Function can exist outside the class also. Function can be stored into a refrence variable.	
+	function can be passed as a parameter to other function.
+
+6. Lambda introduced in java 8 to enable Functional programming
+
+
+======= What is Lambda =============
+1. Lambda is an Anonmous function
+			. No name
+			. No Modifier
+			. No Return type
+			
+	
+	
+	---- example ----
+	
+1)
+
+	public void m1(){
+        System.out.println("this is normal function!!");
+    }
+
+
+    ( ) -> {System.out.println("this is lambda function!!");}
+	
+
+2)
+
+	public void m2(int a, int b){
+        System.out.println(a+b);
+    }
+
+    (int a, int b) -> { System.out.println(a+b);    }
+	
+		or -- if one line is the body so curley bracess is also optional 
+    
+	(int a, int b) -> System.out.println(a+b);
+    
+		or -- return type  ( int ) is optional in lambda
+		
+	(a, b) -> System.out.println(a+b);
+	
+3)
+
+	public int getLength(String name){
+        return name.length();
+    }
+
+    (String name) -> return name.length();
+	
+	(name) -> return name.length();
+    
+		or -- when single line is the body,return type is optional in lambda
+		
+	(name) -> name.length();
+	
+	
+
+4)
+	public Double getEmployeeSalary(Employee emp ){
+		return emp.salary();
+	}
+	
+	
+	(Employee emp ) -> { return emp.salary() };
+	(emp) -> return emp.salary();
+	(emp) -> emp.salary();
+	
+
+
+
+===============================
+		Functional Interface 
+===============================
+
+1. Interface that contain only one abstract method is called Functional Interface.
+
+2. Difference between Functional Interface and Marker Interface
+	1. Interface that contain only one abstract method is called Functional Interface.
+	2. Interface that does not contain any methods is called Marker Interface
+	
+3. Functional Interface are used to invoke Lambda Expression
+				
+				Runnable   ---------->     run() method
+				Callable   ----------> 	   call() method
+				Comparable ---------->	   compareTo() method
+
+
+4. To represented one interface as Functional Interface we will use @FunctionalInterface annotation
+
+5.(imp)  Functional Interface are used to invoke lambda expression
+
+------   Example  -------
+a.	
+	@FunctionalInterface       
+	public interface MyInterface{
+		public void m1();
+		public void m1();
+	}
+	
+	= Compile Time error
+	
+	
+b.	
+	@FunctionalInterface
+	public interface MyInterface{
+		
+	}
+	
+	= Compile Time error
+
+
+c.
+	@FunctionalInterface
+	interface Parent{
+		public void m1();
+	}
+
+
+	@FunctionalInterface
+	interface Child extends Parent{
+
+	}
+	= valid
+
+
+d.
+	@FunctionalInterface
+	interface Parent{
+		public void m1();
+	}
+
+
+	@FunctionalInterface
+	interface Child extends Parent{
+		public void m2();
+	}
+
+	= Compile Time error
+
+
+
+
+e.
+
+	@FunctionalInterface
+	interface Parent{
+		public void m1();
+	}
+
+
+	interface Child extends  Parent{
+		public void m2();
+		public void m3();
+	}
+	= valid
+
+
+f.
+	@FunctionalInterface
+	public interface MyInterface{
+		public void m1();
+	}
+	
+	== valid
+
+
+note :- if we write @FunctionalInterface then our compiler will check interface will contain only one abstract method or not.
+
+
+---> code 
+
+
+// Example for java 8 version
+
+1)
+
+
+	interface MyInterfaceOne{
+		public void m1();
+	}
+
+	public class FunctionalInterface implements MyInterfaceOne{
+		public void m1(){
+			System.out.println("m1 method called...");
+		}
+
+		public static void main(String[] args){
+			FunctionalInterface functionalInterface = new FunctionalInterface();
+			functionalInterface.m1();
+		}
+	}
+
+
+2)
+	
+	@FunctionalInterface
+	interface MyInterfaceTwo{
+		public void m2();
+	}
+
+	public class FunctionalInterface2 {
+		public static void main(String[] args){
+			MyInterfaceTwo mit = () -> System.out.println("m2 method called...");
+			mit.m2();
+
+		}
+	}
+
+
+
+
+6. In java 8 several functional interface got introduced
+		a. Predicate
+		b. Consumer
+		c. Supplier
+		d. Function
+		
+The above interface are provided in java.util.function package
+
+
+
+
+
+================================
+	6.a --  Predicate
+================================
+
+1. it is predefined functional interface
+2. it is used to check condition and return true and false value
+3. Predicate Interface having only one abstract method that is test(T t)
+
+
+	-------- Example --------
+
+1.
+
+	import java.util.function.Predicate;
+	public class PredicateDemo {
+
+		//// method without lambda
+	//    public boolean test(int i){
+	//        if ( i>10 ) return true;
+	//        else return false;
+	//    }
+
+		public static void main(String[] args){
+
+			Predicate<Integer> p = (i) -> i>10;
+			System.out.println(p.test(5)); // false
+			System.out.println(p.test(20)); // true
+		}
+		
+	}
+	
+
+
+2. Declare names in the array and print names which are starting with "A" using lambda expression.
+	
+		String[] names = { "Anushka", "Anupama", "Deepika", "Kajol", "Sunny" };
+        Predicate<String> p1  = name -> name.charAt(0)=='A';
+        for ( String name : names ){
+            if ( p1.test(name) ) System.out.println(name);
+        }
+
+
+
+
+
+
+
+									
+									

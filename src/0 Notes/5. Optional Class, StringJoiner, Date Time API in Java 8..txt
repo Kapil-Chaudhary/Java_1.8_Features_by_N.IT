@@ -1,0 +1,372 @@
+
+
+	StringJoiner
+======================
+
+1. Java.util.StringJoiner class introduced in java 1.8v
+2. It is used to join more than one string with specified delimiter.
+3. We can connect prefix and suffix while joining strings using StringJoiner.
+4. StringJoiner class is used to join string by using delimiter.
+		
+		 StringJoiner stringJoiner = new StringJoiner(CharSequence delimiter, CharSequence prefix, CharSequence suffix);
+
+
+
+---------- CODE -----------
+
+	public class StringJoinerDemo {
+
+		public static void main(String[] args) {
+			StringJoiner stringJoiner = new StringJoiner("_");
+			stringJoiner.add("ashok");
+			stringJoiner.add("it");
+			stringJoiner.add("java");
+
+			System.out.println(stringJoiner); // ashok_it_java
+
+
+			StringJoiner stringJoiner2 = new StringJoiner("-", "(", ")"); // 1. delimiter, 2. prefix, 3.suffix
+			stringJoiner2.add("ashok");
+			stringJoiner2.add("it");
+			stringJoiner2.add("java");
+			System.out.println(stringJoiner2); // (ashok-it-java)
+
+		}
+	}
+
+
+
+
+
+	Optional Class
+=======================
+
+1. java.util.Optional class introduced in java 1.8v
+2. Optional class is used to avoid NullPointerException in the program.
+3. when we perform some operation on object directely then there is a chance of getting null pointer exception.
+
+Question : What is NullPointerException or NPE ?
+Solution : 	When we perform some operation on null value then we will get NullPointerException or NPE.
+					String s = null;
+					s.length(); // NPE
+					
+4. To avoid NullPointerException we have to implement null check before performing operation on the Object.
+			String s = null;
+			if ( s != null ) System.out.println(s.length());
+			
+Note :  In Project there is no gaurantee that every programmer will implement null checks.
+		So to avoid null check, Optional class is introduced in java 1.8v
+
+
+
+
+Question 
+--------
+1. what is Exception and Exceptional Handling in java ? 
+
+
+
+
+
+---------	Example 1 : ----------------
+
+	public class User {
+
+		public String getUserById_1(Integer id){
+			if ( id==100 ) return "Raju";
+			else if ( id==101 ) return "Rani";
+			else if ( id==102 ) return "John";
+			else return null;
+
+		}
+	}
+	
+	
+	
+	public class MsgService {
+
+		public static void main(String[] args) {
+			Scanner scan = new Scanner(System.in);
+
+			System.out.print("Enter User ID : ");
+			int userId = scan.nextInt();
+
+			User user = new User();
+			String userName = user.getUserById(userId);
+
+			// if we perform any operation on null value then we will get null pointer exception
+
+			if ( userName != null ){
+				String msg = userName.toUpperCase() + ", Hello";
+				System.out.println(msg);
+			}
+			else {
+				System.out.println("Invalid ID");
+			}
+		}
+	}
+	
+	
+-------- Example 2 -- with Option class 
+
+
+		public class User {
+
+		//    public String getUserById(Integer id){
+		//        if ( id==100 ) return "Raju";
+		//        else if ( id==101 ) return "Rani";
+		//        else if ( id==102 ) return "John";
+		//        else return null;
+		//
+		//    }
+
+			public Optional<String> getUserById(Integer id){
+				String name = null;
+				if ( id==100 ) return Optional.ofNullable("Raju");
+				else if ( id==101 ) return Optional.ofNullable("Rani");
+				else if ( id==102 ) return Optional.ofNullable("John");
+				else return Optional.ofNullable(name);
+
+			}
+
+		}
+
+
+		
+		
+		public class MsgService {
+
+			public static void main(String[] args) {
+				Scanner scan = new Scanner(System.in);
+
+				System.out.print("Enter User ID : ");
+				int userId = scan.nextInt();
+
+				User user = new User();
+
+		//        String userName = user.getUserById(userId);
+		//        String msg = userName.toUpperCase() + ", Hello";  // if we perform any operation on null value then we will get null pointer exception
+		//        System.out.println(msg);
+
+
+				Optional<String> username = user.getUserById(userId);
+				if ( username.isPresent() ) {
+					String name = username.get();
+					System.out.println(name.toUpperCase() + ", Hello");
+				}
+				else System.out.println("No Data Found !!");
+
+				if ( username.isEmpty() ) System.out.println("empty");
+				else System.out.println("not emplty");
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+=================================
+	Date and Time API changes
+=================================
+
+1. In java we have below 2 classes to represent Date :
+							1) java.util.date
+							2) java.sql.date 
+
+
+2. when we are performing database operation then we will use java.sql.Date class 
+		
+		java.sql.Date date1 = new java.sql.Date(20221203); // give long value
+        System.out.println(date1); // 1970-01-01
+		
+		
+   For normal Date related operation we will use java.util.Date class
+			
+			Date date = new Date(); // Wed Jul 03 14:49:05 IST 2024
+			System.out.println(date);
+
+
+
+3. When we create object for Date class, it will represent both date and time.
+
+4. if we want to get only date or only time then we need to format it using SimpleDateFormat class.  
+					it is present in java.text package 
+
+
+
+
+
+======================================
+	  java.text.SimpleDateFormat
+======================================
+
+1. SimpleDateFormat is a predefined class in java.text package.
+2. This class provided methods to perform Date conversions 
+			
+			Date to String ----> String format(Date d)
+			String to Data ----> Date parse(String str)
+
+
+		
+        // 1. Converting date to string
+
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy"); // "dd/MM/YYYY"
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy"); // 03/Jul/2024
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMMM/yyyy"); // 03/July/2024
+        String format = dateFormat.format(date);
+        System.out.println(format);
+
+
+		// 2. Converting string(date) to date
+
+        SimpleDateFormat sdg3 = new SimpleDateFormat("yyyy-MM-dd");
+        Date parseDate = sdg3.parse("2020-12-20"); // error 
+        System.out.println(parseDate);
+
+3. java.util.date class does not provide any redimate methods to convert one format to another format.
+
+
+
+
+
+====================  >>   IN Java 1.8 introducted Date API changes
+
+1. To overcome the problems of java.util.Data class java 1.8V introduced Date API changes.
+2. In java 1.8V, new classes got introduced to deal with Date functionality 
+					1) java.time.LocalDate ( it will only deal with date )
+					2) java.time.LocalTime ( it will only deal with only time )
+					3) java.time.LocalDateTime ( it will deal with both date and time )
+					
+
+
+
+
+-- CODE --
+
+public class DateDemo {
+
+    public static void main(String[] args) {
+
+        Date date = new Date(); // Wed Jul 03 14:49:05 IST 2024
+        System.out.println(date);
+
+
+        // dd/mm/yyyy
+
+        // 1. Converting date to string
+
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy"); // "dd/MM/YYYY"
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy"); // 03/Jul/2024
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMMM/yyyy"); // 03/July/2024
+        String format = dateFormat.format(date);
+        System.out.println(format);
+
+        /// MMM -- month name
+        //  MMMM --complete month name
+        //  yy -- give last two dight of the year
+        // yyyy -- 4 dight of the year
+        // US (country - date format ) -- MM/dd/yyyy
+
+
+
+        // 2. Converting string(date) to date
+
+//        SimpleDateFormat sdg3 = new SimpleDateFormat("yyyy-MM-dd");
+//        Date parseDate = sdg3.parse("2020-12-20"); // error 
+//        System.out.println(parseDate);
+        
+
+    }
+}
+
+
+
+
+
+-- CODE 2 --
+
+public class NewDateDemo {
+
+    public static void main(String[] args) {
+
+        Date d1 = new Date();
+        System.out.println(d1); // Wed Jul 03 23:28:15 IST 2024
+
+
+        // LocalDate is final class 
+        LocalDate date = LocalDate.now()  ;
+        System.out.println(date); // 2024-07-03
+
+        LocalDate date1 = date.plusDays(3);
+        System.out.println(date1); // add 3 days to the current date - 2024-07-06
+
+
+        LocalDate date2 = date.plusMonths(1);
+        System.out.println(date2); // 2024-08-03
+
+
+        LocalDate localDate = date.plusYears(2);
+        System.out.println(localDate); // add 2 year to current year - 2026-07-03
+
+
+        // same as about
+//        LocalDate localDate1 = date.plusWeeks(2);
+
+        LocalDate parse = LocalDate.parse("2021-12-22");
+        boolean leapYear = parse.isLeapYear();
+        System.out.println("is leap year : " + leapYear); // is leap year : false
+
+        boolean before = LocalDate.parse("2021-12-22").isBefore(LocalDate.parse("2022-12-22"));
+        System.out.println(before); // true
+
+
+
+
+
+
+        // ------------------------------------------------------------------------------------
+        System.out.println("------------------------------------------------------------------------------------");
+
+        LocalTime time = LocalTime.now();
+        System.out.println(time); // 23:37:19.898332
+
+        LocalTime time1 = time.plusHours(2);
+        System.out.println(time1); // add 2 hour
+
+
+
+        // ------------------------------------------------------------------------------------
+        System.out.println("------------------------------------------------------------------------------------");
+
+        LocalDateTime datetime = LocalDateTime.now();
+        System.out.println(datetime); // 2024-07-03T23:39:00.715741100
+
+
+
+        // ------------------------------------------------------------------------------------
+        System.out.println("------------------------------------------------------------------------------------");
+
+        // period between 2 dates
+        Period period = Period.between(LocalDate.parse("1999-12-11"), LocalDate.now());
+        System.out.println(period); // P24Y6M22D
+
+
+        // duration between times
+        Duration duration = Duration.between(LocalTime.parse("18:00"), LocalTime.now());
+        System.out.println(duration); // PT5H46M36.4017557S
+
+
+
+        // ------------------------------------------------------------------------------------
+        System.out.println("------------------------------------------------------------------------------------");
+        
+        // to represent dates this as well 
+        LocalDate of = LocalDate.of(1999, 06, 04);
+        System.out.println(of); // 1999-06-04
+    }
+}

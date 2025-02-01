@@ -1,0 +1,213 @@
+
+
+
+
+-----------------------------------------------		3 Java 8 Features - java 8 predicate consumer supplier function interfaces  	 -----------------
+
+	
+
+
+1. question --> print all the person whose age is grater then 25
+
+	public class a1_Person {
+		String name;
+		int age;
+		a1_Person(String n, int a){
+			this.name = n;
+			this.age= a;
+		}
+
+
+		public static void main(String[] args) {
+
+			a1_Person a1 = new a1_Person("kapil", 24);
+			a1_Person a2 = new a1_Person("akash", 20);
+			a1_Person a3 = new a1_Person("priyanka", 22);
+			a1_Person a4 = new a1_Person("ram", 30);
+
+			ArrayList<a1_Person> list = new ArrayList<>(Arrays.asList(a1, a2, a3, a4));
+			Predicate<a1_Person> p1 = (person1) -> person1.age > 25;
+			for ( a1_Person person : list ) {
+				if ( p1.test(person) ) System.out.println(person.age);
+			}
+
+		}
+	}
+
+
+====== 1. Predicate Joining
+======
+
+a. To combine multiple predicate we will use Predicate Joining
+		test() method --> to execute the condition
+		and () method --> both condition must be true
+		or () method --> one of the condition true
+
+
+b. Task B : print emp names who are working in HYD location in DB team.
+
+
+	class Employee{
+		String name;
+		String location;
+		String dept;
+
+		Employee(String name, String location, String dept){
+			this.name = name;
+			this.location = location;
+			this.dept = dept;
+		}
+
+	}
+
+	public class a2_PredicateJoinDemo {
+
+		public static void main(String[] args) {
+
+			Employee e1 = new Employee("Raju", "channai", "devops");
+			Employee e2 = new Employee("Rani", "Pune", "Networking");
+			Employee e3 = new Employee("Ashok", "HYD", "DB");
+			Employee e4 = new Employee("Genesh", "delhi", "testing");
+			Employee e5 = new Employee("kapil", "HYD", "testing");
+
+			List<Employee> employees = Arrays.asList(e1, e2, e3, e4, e5);
+
+			Predicate<Employee> p1 = e -> e.location.equals("HYD");
+			Predicate<Employee> p2 = e -> e.dept.equals("DB");
+			Predicate<Employee> p3 = e -> e.name.equals("kapil");
+
+			// predicate joining
+			Predicate<Employee> p = p1.and(p2); // ashok
+			Predicate<Employee> pp = p1.or(p2); // ashok
+			Predicate<Employee> ppp = p1.or(p2).and(p3); // kapil
+
+			for ( Employee e : employees ){
+	//            if ( p.test(e) ) System.out.println(e.name);
+				if ( pp.test(e) ) System.out.println(e.name);
+			}
+			
+			
+			System.out.println("==========================================");
+			BiPredicate<Integer, Integer> biPredicate = (i,j) -> (i+j)==20;
+			System.out.println(biPredicate.test(10,10));
+		}
+	}
+
+
+
+
+============================
+Suplier FunctionalInterface
+============================
+
+1. Supplier is predefined functional Interface introduced in java 1.8V.
+2. It contains only one abstract method that is get() method.
+3. Supplier interface will not take any input, it will only return the value.
+
+... Example : OTP Generation
+
+	public class a3_SaplierDemo {
+
+		public static void main(String[] args) {
+			Supplier<String> s = () -> {
+				String otp = "";
+				for ( int i=1; i<=5; i++){
+					otp = otp + (int) (Math.random()*10);
+				}
+				return otp;
+			};
+
+			System.out.println(s.get());
+			System.out.println(s.get());
+			System.out.println(s.get());
+		}
+	}
+
+
+
+
+
+=============================
+Consumer FunctionalInterface 
+=============================
+
+1. consumer is a predefined functional interface.
+2. it contains only one abstract method i.t accept (T t).
+3. Consumer will accept input but it won't return anything.
+4. If we take 2 input then we will use BiConsumer
+
+
+Note : In java 8 forEach() method get introducted. forEach(Consumer consumer) method will take Consumer as parameter.
+
+
+
+===>   forEach(Consumer c) method
+> forEach ( Consumer c ) method introduced in java 1.8v
+> forEach method added in iterable interface
+> forEach is a default method ( it is having body )
+> this method is used to access each element from the collection ( traverse collections from start to end )
+
+	ArrayList<Integer> list = new ArrayList<>(Arrays.asList(1,2,3,4,5));
+	list.forEach( (i) -> System.out.print(i + " "));	
+
+
+
+==============================================================================
+ Task : retrive student record based on student id and return that record. 
+==============================================================================
+
+1. predicate, supplier, consumer will not satisfied my requirement
+
+Predicate --> Conditional check ---> return true or false  => test()
+Supplier --> Will not take any input --> only output ==> get()
+Consumer --> Only take input --> will not return anything  ==> accept()
+Function ---> will take input --> will return output ==> apply()
+
+
+
+================================
+Function FunctionalInterface
+================================
+Action --> will take input --> will return output
+
+1. Function Interface is a predefined functional interface.
+2. Function Interface will have only one abstract method i.e apply(T r).
+			
+			interface Function<R, T> {
+				R apply(T t);
+			}
+			
+3. it will take the input and return the output
+
+
+
+
+--- Example ----------
+
+	public class a5_FunctionInterfaceDemo {
+
+
+		public static void main(String[] args) {
+			Function<String, Integer> fi = (name) -> name.length();
+
+			Integer ros = fi.apply("kapil");
+			System.out.println(ros);
+
+
+			System.out.println(fi.apply("akash chaudhary"));
+			System.out.println(fi.apply("priyanka"));
+		}
+	}
+
+
+
+
+Note : what I have learn till now --> 
+									Predicate & BiPredicate 
+									supplier
+									Consumer & BiConsumer
+									Function & BiFunction
+									
+									
+									
+						

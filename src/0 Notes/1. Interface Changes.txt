@@ -1,0 +1,262 @@
+
+
+------------------------------    Java 8 Features  ------------------------------------
+
+
+java 1.0
+java 1.1
+
+java 1.2 ( Collection Framework )
+
+...
+
+java 1.5 ( Big Release )  -- 
+							Generics.
+							For/in loop.
+							Autoboxing/Unboxing.
+							Typesafe Enums.
+							Varargs.
+							Static Import.
+							Annotations (Metadata)
+							
+
+...
+
+
+java 1.8 (Big Release ) ---  Functional Programming ...
+	
+	
+	Lambda expressions, 
+	Method references,
+	Functional interfaces,
+	Stream API,
+	Default methods,
+	Base64 Encode Decode,
+	Static methods in interface,
+	Optional class,
+	Collectors class,
+	ForEach() method,
+	Nashorn JavaScript Engine,
+	Parallel Array Sorting,
+	Type and Repating Annotations,
+	
+
+-> Java 8 Introduced new features
+-> Java 8 changed progrmming style
+
+
+=====  Main Aim of java 8 Version ==============
+1. Simplfy java progrmming
+2. Enable Functional Programming
+3. Write more read and consice code
+
+
+
+
+==================================================
+			Java 1.8 Features
+==================================================	
+
+1. Interface changes
+	upto java 7 version our interface contain only abstract methods ( methods that does not contain body )
+	but in Java 8 we can write concreate methods( methods that does contain body ) also in Java 8 
+	
+	We will learn default methods and static methods in java 8 with body
+	a. default methods
+	b. static methods
+	
+	.. Interface is a collection of abstract methods upto java 7
+	.. but for java 8  -- Interface is a collection of abstract methods with default and static methods
+	
+
+2. Functional Interface  ( @FunctionalInterface ) 
+	
+	The Interface that contain only one Abstract method that interface is called Functional Interface.
+	there are 3 types of interface
+		2.1 - Predicate & BiPredicate
+		2.1 - Consumer Interface
+		2.3 - Supplier Interface
+		2.4 - Function Interface
+
+
+3. Lambda Expression is Anonmous function
+		A lambda expression is a short block of code which takes in parameters and returns a value. 
+		Lambda expressions are similar to methods, but they do not need a name and they can be implemented right in the body of a method.
+
+		to call lambda expression we have functional interfaces or To call those lambda function we have to write functional interface
+
+
+
+4. Method References and Constructor References
+										
+5. Stream API ( very important )
+		Stream API is a newly added feature to the Collections API in Java 8. 
+		A stream represents a sequence of elements and supports different operations (Filter, Sort, Map, and Collect) from a collection.
+		
+		.. stream api is just to process the data not to store the data
+
+		----- examples ---
+		1. get the employee whose salary is >= 1000
+		2. get the employee whose salary is >= 1000 and working in delhi location
+		3. get employee email whose salary is > 10000 and working in hydrabad location
+		4. get employee whose names starts with "A"
+
+
+
+
+6. Optional Class --- ( to avoid null pointer exception )
+
+7. SplIterator  --- to do paraller processing on data 
+
+8. StringJoiner
+
+9. Collection Framework Changes
+
+10 Data and Time API
+
+
+
+
+
+
+
+
+
+
+
+--   1   --
+-----------------------      Interface Changes    --------------------------------------
+
+1. Interface means collection of abstract methods.
+note -> abstract method -- method that does not any body.
+
+
+2. a class can implements interface using "implements"
+3. when a class implementing interface its mandatory that class should implement all abstract methods of that class otherwise class cannot be compile.
+
+4. to add new functionalty to the existing interfaces, default and static methods comes into the picture.
+		
+		--- example ---
+		suppose koi project hai ek aur humko kesi interface mai abstract method add karna ho, but jaise he hum add karenge toh vo method humko sambhi implemented class mai implement karna hoga
+		bhale he hum ye chahate naho toh isko resolve karne k lie java 8 mai concreate method introduce hua hai ( default and static method )
+		
+
+
+example ----  here i am taking one interface with one abstract method. all the classes which are implementing that interface should override interface methods.
+
+interface Vehicle {
+    public abstract void startVehicles();
+}
+
+class Car implements Vehicle{
+    @Override
+    public void startVehicles(){
+        // logic to start car
+    }
+}
+
+
+class Bus implements Vehicle{
+    @Override
+    public void startVehicles(){
+        // logic to start bus
+    }
+
+}
+
+
+class Bike implements Vehicle{
+    @Override
+    public void startVehicles(){
+        // logic to start bike
+    }
+}
+
+
+5. In java 7, if we add new method in interface then car, bike, and bus will fail to compile time 
+	but in java 8, we can write concreate method in interface this methods will be default or static
+	1. default method = we can override this default method otherwise interface default method will be called
+	2. static method = we cannot override this static methods. but we can call the method by using interface name not by implemented class name
+
+
+--- to overcome above problem we can use default and static methods 
+1. Interface can have concreate methods from 1.8V
+2. Interface concreate method should be default and static.
+3. default methods can override in implemented class.
+4. static methods cannot be override in implemented class.
+5. we can write multiple default and static methods in implemented class.
+6. default and static methods provide backward compactability.
+
+
+Ex : forEach() method added in java.util.Iterable interface as default method in 1.8V
+
+
+ 
+------  complete code -------
+
+
+package Lacture1;
+
+interface Vehicle {
+    public abstract void startVehicles();
+
+//    public abstract void clean(); // it will give error bcos we have to implement this method in all implemented classes
+
+    public default void clean(){
+        System.out.println("this is clean method in interface..");
+    }
+
+    public static void staticMethod() {
+        System.out.println("This is static method in interface..");
+    }
+
+}
+
+class Car implements Vehicle{
+    @Override
+    public void startVehicles(){
+        // logic to start car
+        System.out.println("Car Start...");
+    }
+}
+
+class Bus implements Vehicle{
+
+    public void startVehicles(){
+        // logic to start bus
+        System.out.println("bus Start... 1");
+    }
+}
+
+class Bike implements Vehicle{
+    @Override
+    public void startVehicles(){
+        // logic to start bike
+        System.out.println("Bike Start...");
+    }
+}
+
+
+public class Lacture1 implements Vehicle {
+
+    @Override
+    public void startVehicles() {
+        // logic to start bike
+        System.out.println("Bike Start...");
+    }
+
+    //  we can override this method because it is default
+//    public void clean(){
+//        System.out.println("this is clean method in implemented class...");
+//    }
+
+    public static void main(String[] args) {
+        Lacture1 lacture1 = new Lacture1();
+        lacture1.startVehicles();
+        lacture1.clean(); // "this is clean method in interface.."  ,
+        Vehicle.staticMethod();
+    }
+}
+
+
+
